@@ -10,7 +10,7 @@ app.use(express.json());
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = "mongodb+srv://jewelary_shop:Zx3uYdV5OYKJAR5e@cluster0.kbqlzif.mongodb.net/?retryWrites=true&w=majority";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -81,6 +81,13 @@ async function run() {
       const email = req.params.email;
       const query = { email: email };
       const result = await myJewelleryCollection.find(query).toArray();
+      res.send(result);
+    })
+
+    app.delete('/myjewellarydelete', async (req, res) => {
+      const id = req.params.id;
+      const query = { id: new ObjectId(id) };
+      const result = await myJewelleryCollection.deleteOne(query);
       res.send(result);
     })
 
