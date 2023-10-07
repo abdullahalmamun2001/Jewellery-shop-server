@@ -30,6 +30,40 @@ async function run() {
     const usersCollection = client.db("jewellaryShop").collection("users");
     const jewelaryCollection =  client.db("jewellaryShop").collection("jewellery");
 
+    // users api 
+
+    app.put('/user/:email', async (req, res) => {
+      const email = req.params.email;
+      const user = req.body;
+      const query = { email: email };
+      const option = { upsert: true };
+      const updateDoc = {
+        $set: user,
+      };
+      const result =await usersCollection.updateOne(query, updateDoc, option);
+      console.log(result);
+      res.send(result);
+    })
+
+    app.post('/user',async(req,res)=>{
+      const body=req.body;
+      const result=await usersCollection.insertOne(body);
+      res.send(result)
+    })
+
+    app.post('/alljewellery', async(req,res)=>{
+      const body=req.body;
+      const result=await jewelaryCollection.insertOne(body);
+      res.send(result);
+    })
+
+    app.get('/alljewellery/:email',async(req,res)=>{
+      const email=req.query.email;
+      const query={email:email};
+      const result=await jewelaryCollection.find(query).toArray();
+      res.send(result);
+    })
+
 
 
 
