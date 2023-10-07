@@ -29,6 +29,7 @@ async function run() {
 
     const usersCollection = client.db("jewellaryShop").collection("users");
     const jewelaryCollection = client.db("jewellaryShop").collection("jewellery");
+    const myJewelleryCollection = client.db("jewellaryShop").collection("myJewellery");
 
     // users api 
 
@@ -71,6 +72,17 @@ async function run() {
     })
 
 
+    app.post('/myjewellary', async (req, res) => {
+      const body = req.body;
+      const result = await myJewelleryCollection.insertOne(body);
+      res.send(result);
+    })
+    app.get('/myjewellary/:email', async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await myJewelleryCollection.find(query).toArray();
+      res.send(result);
+    })
 
 
 
