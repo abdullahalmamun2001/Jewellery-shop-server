@@ -28,7 +28,7 @@ async function run() {
     // await client.connect();
 
     const usersCollection = client.db("jewellaryShop").collection("users");
-    const jewelaryCollection =  client.db("jewellaryShop").collection("jewellery");
+    const jewelaryCollection = client.db("jewellaryShop").collection("jewellery");
 
     // users api 
 
@@ -40,28 +40,34 @@ async function run() {
       const updateDoc = {
         $set: user,
       };
-      const result =await usersCollection.updateOne(query, updateDoc, option);
+      const result = await usersCollection.updateOne(query, updateDoc, option);
       console.log(result);
       res.send(result);
     })
 
-    app.post('/user',async(req,res)=>{
-      const body=req.body;
-      const result=await usersCollection.insertOne(body);
+    app.post('/user', async (req, res) => {
+      const body = req.body;
+      const result = await usersCollection.insertOne(body);
       res.send(result)
     })
 
-    app.post('/alljewellery', async(req,res)=>{
-      const body=req.body;
-      const result=await jewelaryCollection.insertOne(body);
+    app.post('/alljewellery', async (req, res) => {
+      const body = req.body;
+      const result = await jewelaryCollection.insertOne(body);
       res.send(result);
     })
 
-    app.get('/alljewellery/:email',async(req,res)=>{
-      const email=req.query.email;
-      const query={email:email};
-      const result=await jewelaryCollection.find(query).toArray();
+    app.get('/alljewellery/:email', async (req, res) => {
+      const email = req.query.email;
+      const query = { email: email };
+      const result = await jewelaryCollection.find(query).toArray();
       res.send(result);
+    })
+
+    app.get('/alljewellery', async (req, res) => {
+      const body = req.body;
+      const result = await jewelaryCollection.find(body).toArray();
+      res.send(result)
     })
 
 
