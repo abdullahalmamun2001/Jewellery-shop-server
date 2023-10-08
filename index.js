@@ -31,6 +31,22 @@ async function run() {
     const jewelaryCollection = client.db("jewellaryShop").collection("jewellery");
     const myJewelleryCollection = client.db("jewellaryShop").collection("myJewellery");
 
+
+
+
+    // admin api 
+    app.get('/user/admin/:email',  async (req, res) => {
+      const email = req.params.email;
+      const decodedEmail = req.decoded.email;
+
+      if (email !== decodedEmail) {
+        return ({ admin: false })
+      }
+      const query = { email: email };
+      const user = await usersCollection.findOne(query);
+      const result = { admin: user?.role === 'admin' }
+      res.send(result)
+    })
     // users api 
 
     app.put('/user/:email', async (req, res) => {
@@ -84,9 +100,9 @@ async function run() {
       res.send(result);
     })
 
-    app.delete('/myjewellarydelete', async (req, res) => {
+    app.delete('/myjewellarydelete/:id', async (req, res) => {
       const id = req.params.id;
-      const query = { id: new ObjectId(id) };
+      const query = { _id: new ObjectId(id) };
       const result = await myJewelleryCollection.deleteOne(query);
       res.send(result);
     })
