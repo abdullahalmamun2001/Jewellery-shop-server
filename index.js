@@ -11,7 +11,7 @@ app.use(express.json());
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = "mongodb+srv://jewelary_shop:Zx3uYdV5OYKJAR5e@cluster0.kbqlzif.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASSWORD}@cluster0.kbqlzif.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -35,14 +35,14 @@ async function run() {
 
 
     // admin api 
-    app.get('/user/admin/:email',  async (req, res) => {
-      const email = req.params.email;
-      console.log(email);
+    app.get('/user/admin',  async (req, res) => {
+      const email = req.query.email;
+      // console.log(email, "email");
       const query = { email: email };
       const user = await usersCollection.findOne(query);
-      console.log(user);
+      console.log(email, 'hello');
       const result = { admin: user?.role == 'admin' }
-      res.send({result})
+      res.send(result)
     })
     // users api 
 
@@ -79,8 +79,12 @@ async function run() {
     })
 
     app.get('/alljewellery', async (req, res) => {
-      const body = req.body;
-      const result = await jewelaryCollection.find(body).toArray();
+     
+      const result = await jewelaryCollection.find().toArray();
+      res.send(result)
+    })
+    app.get('/user', async (req, res) => {
+      const result = await usersCollection.find().toArray();
       res.send(result)
     })
 
@@ -115,7 +119,6 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
 
 
 app.get('/', (req, res) => {
